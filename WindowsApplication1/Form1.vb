@@ -37,7 +37,7 @@ Public Class Form1
                 If Not IsNothing(pageBytes) Then
                     '.Cast(Of iTextSharp.text.pdf.RandomAccessFileOrArray)
 
-                    token = New PRTokeniser(pageBytes)
+                    ' token = New PRTokeniser(pageBytes)
                     While token.NextToken()
                         tknType = token.TokenType()
                         tknValue = token.StringValue

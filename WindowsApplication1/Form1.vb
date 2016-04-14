@@ -2,12 +2,21 @@
 Public Class Form1
 
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-
-        Dim mstrRutaPdf As String = "C:\Users\usuario\Desktop\JavaEE.pdf"
-        Dim contenido As String = Me.ParsePdfText(mstrRutaPdf)
-        MsgBox(contenido)
+        Dim open As New OpenFileDialog
+        open.Filter = "*.*|*.*"
+        open.Multiselect = True
+        Dim result As DialogResult = open.ShowDialog()
+        If result = DialogResult.OK Then
+            MsgBox(IO.Path.GetFullPath(open.FileNames.ToString).ToString)
+        End If
     End Sub
-
+    'Public Sub ChooseFolder()
+    '    If OpenFileDialog1.ShowDialog() = System.Windows.Forms.DialogResult.OK Then
+    '        Dim sr As New System.IO.StreamReader(OpenFileDialog1.FileName)
+    '        MsgBox(sr.ReadToEnd)
+    '        sr.Close()
+    '    End If
+    'End Sub
     Public Function ParsePdfText(ByVal sourcePDF As String, _
                                   Optional ByVal fromPageNum As Integer = 0, _
                                   Optional ByVal toPageNum As Integer = 0) As String

@@ -2,21 +2,30 @@
 Public Class Form1
 
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        Dim contador As Integer = 0
         Dim open As New OpenFileDialog
         open.Filter = "*.*|*.*"
         open.Multiselect = True
         Dim result As DialogResult = open.ShowDialog()
         If result = DialogResult.OK Then
-            MsgBox(IO.Path.GetFullPath(open.FileNames.ToString).ToString)
+            For Each Name As String In open.FileNames
+                MsgBox("Ruta: " & Name & "::: Nombre: " & open.SafeFileNames(contador))
+                My.Computer.FileSystem.CopyFile(Name, "C:\Alex\" + open.SafeFileNames(contador))
+                contador = contador + 1
+            Next Name
+            'MsgBox(open.SafeFileName)
+            'My.Computer.FileSystem.CopyFile(open.FileName.ToString, "C:\Alex\" + open.SafeFileName.ToString)
+        End If
+
+
+    End Sub
+    Public Sub ChooseFolder()
+        If OpenFileDialog1.ShowDialog() = System.Windows.Forms.DialogResult.OK Then
+            Dim sr As New System.IO.StreamReader(OpenFileDialog1.FileName)
+            MsgBox(sr.ReadToEnd)
+            sr.Close()
         End If
     End Sub
-    'Public Sub ChooseFolder()
-    '    If OpenFileDialog1.ShowDialog() = System.Windows.Forms.DialogResult.OK Then
-    '        Dim sr As New System.IO.StreamReader(OpenFileDialog1.FileName)
-    '        MsgBox(sr.ReadToEnd)
-    '        sr.Close()
-    '    End If
-    'End Sub
     Public Function ParsePdfText(ByVal sourcePDF As String, _
                                   Optional ByVal fromPageNum As Integer = 0, _
                                   Optional ByVal toPageNum As Integer = 0) As String
@@ -44,9 +53,9 @@ Public Class Form1
             For i As Integer = fromPageNum To toPageNum Step 1
                 pageBytes = reader.GetPageContent(i)
                 If Not IsNothing(pageBytes) Then
-                    '.Cast(Of iTextSharp.text.pdf.RandomAccessFileOrArray)
+                    pageBytes.Cast(Of iTextSharp.text.pdf.RandomAccessFileOrArray)()
 
-                    ' token = New PRTokeniser(pageBytes)
+                    'token = New PRTokeniser(pageBytes)
                     While token.NextToken()
                         tknType = token.TokenType()
                         tknValue = token.StringValue
